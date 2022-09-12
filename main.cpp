@@ -17,12 +17,15 @@ int main()
   result = grayscale(png);
   result.writeToFile("out-grayscale.png");
 
-  result = createSpotlight(png, 450, 150);
-  result.writeToFile("out-spotlight.png");
-
+  png.readFromFile("alma.png");
   result = illinify(png);
   result.writeToFile("out-illinify.png");
 
+  png.readFromFile("alma.png");
+  result = createSpotlight(png, 450, 150);
+  result.writeToFile("out-spotlight.png");
+
+  png.readFromFile("alma.png");
   png2.readFromFile("overlay.png");
   result = watermark(png, png2);
   result.writeToFile("out-watermark.png");

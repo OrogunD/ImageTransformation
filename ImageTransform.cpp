@@ -68,12 +68,23 @@ PNG grayscale(const PNG &image)
 
 PNG createSpotlight(const PNG &image, int centerX, int centerY)
 {
+    const double MIN_L_MULTIPLIER = 0.20;
+    const double MAX_DISTANCE = (1 - MIN_L_MULTIPLIER) / 0.005;
     for (unsigned x = 0; x < image.width(); x++)
     {
         for (unsigned y = 0; y < image.height(); y++)
         {
+            const int deltaX = (int)x - centerX, deltaY = (int)y - centerY;
+            const double distance = sqrt((deltaX * deltaX) + (deltaY * deltaY));
+
+            double lMultiplier = MIN_L_MULTIPLIER;
+            if (distance < MAX_DISTANCE)
+            {
+                lMultiplier = 1.0 - (distance * 0.005);
+            }
+
             HSLAPixel &pixel = image.getPixel(x, y);
-            pixel.l = 0.5;
+            pixel.l *= lMultiplier;
         }
     }
     return image;
@@ -91,13 +102,22 @@ PNG createSpotlight(const PNG &image, int centerX, int centerY)
  **/
 PNG illinify(const PNG &image)
 {
+    const double midpoint = (11 + 216) / 2.0;
+
     for (unsigned x = 0; x < image.width(); x++)
     {
         for (unsigned y = 0; y < image.height(); y++)
         {
             HSLAPixel &pixel = image.getPixel(x, y);
 
-            pixel.h = 11;
+            if (pixel.h < midpoint || pixel.h > (midpoint + 180.0))
+            {
+                pixel.h = 11.0;
+            }
+            else
+            {
+                pixel.h = 216.0;
+            }
         }
     }
     return image;
@@ -120,10 +140,13 @@ PNG watermark(const PNG &firstImage, const PNG &secondImage)
     {
         for (unsigned y = 0; y < firstImage.height(); y++)
         {
-            HSLAPixel &pixel = firstImage.getPixel(x, y);
-
-            pixel.l = 0.2;
+            HSLAPixel &secondPixel = secondImage.getPixel(x, y);
+            if (secondPixel.l == 1.0)
+            {
+                HSLAPixel &firstPixel = firstImage.getPixel(x, y);
+                firstPixel.l += 0.2;
+            }
         }
     }
-    return secondImage;
+    return firstImage;
 }
