@@ -10,15 +10,16 @@
 #include <iostream>
 #include <sstream>
 
-namespace uiuc {
-    class HSLAPixel{
-    public:
-        double h; // hue of the pixel
-        double s; // saturation of the pixel
-        double l; // Luminance of the pixel
-        double a; // alpha channel
-    };
-    // Put your HSLAPixel class definition here.
+namespace uiuc
+{
+  class HSLAPixel
+  {
+  public:
+    double h; // hue of the pixel
+    double s; // saturation of the pixel
+    double l; // Luminance of the pixel
+    double a; // alpha channel
+  };
+  // Put your HSLAPixel class definition here.
   // (Remember to end it with a semicolon!)
-
 }
